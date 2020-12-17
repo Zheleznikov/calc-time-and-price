@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Расчет времени поездки на такси</title>
+  </head>
+  <body>
+ 
+    <form action="" class="form">
+      <h1 style="text-align:center">Расчитаем время и стоимость поездки на такси</h1>
+      <p><b>Формула для расчета времени:</b></p>
+      <p>ВРЕМЯ В МИНУТАХ = (РАССТОЯНИЕ / СРЕДНЯЯ СКОРОСТЬ) * 60</p>
+      <p class="min">Результат округляем до целого числа в большую сторону.</p>
+      <p><b>Формула для расчета стоимости:</b></p>
+      <p>СТОИМОСТЬ = ВРЕМЯ ПОЕЗДКИ * СТОИМОСТЬ МИНУТЫ</p>
+      <h2 style="text-align: center;">Форма для расчета</h2>
+      <p>Введите расстояние в километрах</p>
+      <input class="distance" type="text" required pattern="\d{1,3}(\.\d{1,2})?" />
+      <p>Выберите время дня</p>
+      <select required>
+        <option selected disabled></option>
+        <option value="night">00:01 - 08:00</option>
+        <option value="morning">08:01 - 12:00</option>
+        <option value="afternoon">12:01 - 18:00</option>
+        <option value="evening">18:01 - 22:00</option>
+        <option value="night">22:01 - 00:00</option>
+      </select>
+      <p>Введите стоимость одной минуты поездки</p>
+      <input class="cost" type="text" required pattern="\d{1,3}" value="11" />
+      <!-- <p>Рассчитаем</p> -->
+      <button type="">Расчитать</button>
+      <h2>Результаты</h2>
+      <p class="time">Время в пути - <span>___</span> мин.</p>
+      <p class="price">Цена ~ <span>___</span> руб.</p>
+    </form>
+
+    <table border="1" align="center" cellpadding="0" cellspacing="0">
+      <caption>
+        <h2>Матрица расстояний между адресами для автомобильных дорог</h2>
+      </caption>
+      <tr style="background-color: #d3d3d3">
+        <th>АДРЕС</th>
+        <th>УСАЧЁВА, 3</th>
+        <th>КОМСОМОЛЬСКИЙ ПРОСПЕКТ, 18</th>
+        <th>ЗУБОВСКИЙ БУЛЬВАР, 37</th>
+        <th>М. ПИРОГОВСКАЯ, 25</th>
+        <th>ХАМОВНИЧЕСКИЙ ВАЛ, 34</th>
+        <th>ФРУНЗЕНСКАЯ НАБЕРЕЖНАЯ, 46</th>
+        <th>3-Я ФРУНЗЕНСКАЯ УЛИЦА, 12</th>
+      </tr>
+
+      <tr>
+        <th>УСАЧЁВА, 3</th>
+        <th>0</th>
+        <th>1.4</th>
+        <th>1.5</th>
+        <th>0.89</th>
+        <th>2.6</th>
+        <th>2.6</th>
+        <th>2.6</th>
+      </tr>
+
+      <tr>
+        <th>КОМСОМОЛЬСКИЙ ПРОСПЕКТ, 18</th>
+        <th>1.4</th>
+        <th>0</th>
+        <th>2.9</th>
+        <th>2.3</th>
+        <th>2.3</th>
+        <th>2.3</th>
+        <th>2.3</th>
+      </tr>
+
+      <tr>
+        <th>ЗУБОВСКИЙ БУЛЬВАР, 37</th>
+        <th>1.4</th>
+        <th>1.5</th>
+        <th>0</th>
+        <th>1.9</th>
+        <th>3.8</th>
+        <th>3</th>
+        <th>3.3</th>
+      </tr>
+
+      <tr>
+        <th>М. ПИРОГОВСКАЯ, 25</th>
+        <th>1.5</th>
+        <th>3</th>
+        <th>2.4</th>
+        <th>0</th>
+        <th>1.2</th>
+        <th>3.4</th>
+        <th>2.3</th>
+      </tr>
+
+      <tr>
+        <th>ХАМОВНИЧЕСКИЙ ВАЛ, 34</th>
+        <th>1.5</th>
+        <th>3.7</th>
+        <th>3.7</th>
+        <th>1.2</th>
+        <th>0</th>
+        <th>1.7</th>
+        <th>1.7</th>
+      </tr>
+
+      <tr>
+        <th>ФРУНЗЕНСКАЯ НАБЕРЕЖНАЯ, 46</th>
+        <th>3.2</th>
+        <th>3.9</th>
+        <th>4.7</th>
+        <th>2.7</th>
+        <th>1.7</th>
+        <th>0</th>
+        <th>2.2</th>
+      </tr>
+
+      <tr>
+        <th>3-Я ФРУНЗЕНСКАЯ УЛИЦА, 12</th>
+        <th>1.4</th>
+        <th>2.4</th>
+        <th>3.5</th>
+        <th>2.3</th>
+        <th>1.4</th>
+        <th>1.3</th>
+        <th>0</th>
+      </tr>
+    </table>
+  </body>
+
+  <!-- === СТИЛИ ===  -->
+  <style>
+
+    table {
+      width: 700px;
+      border: 1;
+    }
+    form {
+      max-width: 540px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    p {
+      margin: 10px 0;
+    }
+
+    .min {
+      margin-top: 0;
+    }
+
+    .cost {
+      margin-bottom: 28px;
+    }
+  </style>
+  <!-- === /СТИЛИ === -->
+
+
+  <script>
+    
+    const distance = document.querySelector('.distance');
+    const cost = document.querySelector('.cost');
+    const select = document.querySelector('select');
+    const button = document.querySelector('button');
+    const form = document.querySelector('form');
+    const outputPrice = document.querySelector('.price span');
+    const outputTime = document.querySelector('.time span');
+
+    const day_average_velocity = {
+      night_velocity: 50,
+      morning_velocity: 35,
+      afternoon_velocity: 42,
+      evening_velocity: 30,
+    };
+    /* 
+  Функция для расчета времени и стоимости поездки
+  Для расчета надо передать в переменную 'calc me' расстояние в километрах
+  и время дня: night, morning, afternoon или evening.
+  Функция вернет объект с расстоянием, временем дня, временем в минутах и стоимостью поездки в рублях
+  */
+
+    function calc_time_and_price(obj_to_calc, velocity_data) {
+      const { distance, price_for_min, day_time } = obj_to_calc;
+      const { night_velocity, morning_velocity, afternoon_velocity, evening_velocity } = velocity_data;
+      let velocity;
+
+      switch (day_time) {
+        case 'night':
+          velocity = night_velocity;
+          break;
+        case 'morning':
+          velocity = morning_velocity;
+          break;
+
+        case 'afternoon':
+          velocity = afternoon_velocity;
+          break;
+
+        case 'evening':
+          velocity = evening_velocity;
+          break;
+      }
+
+      const time_mins = Math.ceil((distance / velocity) * 60);
+      const price_rubles = time_mins * price_for_min;
+      return { day_time, distance, time_mins, price_rubles };
+    }
+
+    function calc_user_data(e) {
+      e.preventDefault();
+      const user_data = {
+        distance: +distance.value,
+        day_time: select.value,
+        price_for_min: +cost.value,
+      };
+      const user_res = calc_time_and_price(user_data, day_average_velocity);
+      outputPrice.textContent = user_res.price_rubles;
+      outputTime.textContent = user_res.time_mins;
+    }
+
+    form.addEventListener('submit', calc_user_data);
+  </script>
+</html>
